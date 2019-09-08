@@ -1,0 +1,45 @@
+pring:
+  application:
+    name: bkk-route-crawler
+  main:
+    banner-mode: "off"
+
+management:
+  server:
+    port: 9001
+  endpoint:
+    health:
+      show-details: "ALWAYS"
+  security:
+    enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+server:
+  port: 8002
+  servlet:
+    application-display-name: "BKK"
+    context-path: /bkk
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: FULL
+
+scheulder:
+  bkkkScheulder:  "0 0/5 0 ? * * *"
+
+bkk:
+  apiUrl: "https://futar.bkk.hu/api/query/v1/ws/otp/api/where/"
+  apiKey: "bkk-web"
+  appVersion: "apiary-1.0"
+  version: 3
+
