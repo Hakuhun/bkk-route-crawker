@@ -27,16 +27,16 @@ public class BkkController {
 
         @GetMapping("trip")
         public ResponseEntity<BkkTripDetails> getTrip(@RequestParam("vehicle") String veichle, @RequestParam("trip") String trip){
-        BkkTripDetails tripData = externalBkkRestClient.getTrip(
-                configuration.getApiKey(),
-                configuration.getVersion(),
-                configuration.getAppVersion(),
-                "false",
-                trip,
-                veichle,
-                false
-        );
+            BkkTripDetails tripData = externalBkkRestClient.getTrip(
+                    configuration.getApiKey(),
+                    configuration.getVersion(),
+                    configuration.getAppVersion(),
+                    "false",
+                    trip,
+                    veichle,
+                    false
+            );
 
-        return ResponseEntity.ok(tripData);
+            return ResponseEntity.ok(tripData);
     }
 }
