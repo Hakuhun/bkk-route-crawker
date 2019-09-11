@@ -30,6 +30,9 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 
 	//compile 'mysql:mysql-connector-java'
+	// https://mvnrepository.com/artifact/com.coveo/feign-error-decoder
+	compile group: 'com.coveo', name: 'feign-error-decoder', version: '1.3.1'
+
 
 }
 
