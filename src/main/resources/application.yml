@@ -43,3 +43,7 @@ bkk:
   appVersion: "apiary-1.0"
   version: 3
 
+weather:
+  url: "http://localhost:8001/bkk"
+  fileSystemPath: "weatherproperties.json"
+
