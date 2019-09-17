@@ -6,10 +6,14 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.FeignException;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.client.BkkWeatherClient;
+import hu.oe.bakonyi.bkk.bkkroutecrawler.model.Location;
+import hu.oe.bakonyi.bkk.bkkroutecrawler.model.weather.BasicWeatherModel;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.weather.Model200;
 import lombok.extern.log4j.Log4j2;
+import net.sf.geographiclib.Geodesic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -18,8 +22,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -33,6 +37,9 @@ public class WeatherDownloaderService {
 
     @Value("${weather.fileSystemPath}")
     String path;
+
+    @Autowired
+    ConversionService conversionService;
 
     public void downloadWeatherData() throws Exception {
         File weatherFile = new File(path);
@@ -59,13 +66,15 @@ public class WeatherDownloaderService {
         }else throw new Exception("Hiba történt az időjáráskliens megszólítása közben");
     }
 
-    public List<Model200> getWeatherData() throws IOException {
+    public List<BasicWeatherModel> getWeatherData() throws IOException {
         try {
             this.downloadWeatherData();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Arrays.asList(mapper.readValue(new File(path), Model200[].class));
+        return  Arrays.asList(mapper.readValue(new File(path), Model200[].class)).stream().map(
+                x -> conversionService.convert(x, BasicWeatherModel.class)).collect(Collectors.toList()
+        );
     }
 
 }

@@ -1,4 +1,4 @@
-package hu.oe.bakonyi.bkk.bkkroutecrawler;
+package hu.oe.bakonyi.bkk.bkkroutecrawler.repository;
 
 import hu.oe.bakonyi.bkk.bkkroutecrawler.entity.Routes;
 import org.springframework.data.repository.CrudRepository;

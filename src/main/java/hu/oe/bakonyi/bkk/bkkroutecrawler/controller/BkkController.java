@@ -1,6 +1,6 @@
 package hu.oe.bakonyi.bkk.bkkroutecrawler.controller;
 
-import hu.oe.bakonyi.bkk.bkkroutecrawler.RouteRepository;
+import hu.oe.bakonyi.bkk.bkkroutecrawler.repository.RouteRepository;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.client.BkkRouteClient;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.configuration.BkkConfiguration;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.route.BkkVeichleForRoute;

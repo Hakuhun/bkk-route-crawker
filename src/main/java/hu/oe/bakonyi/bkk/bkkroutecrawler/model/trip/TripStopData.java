@@ -8,5 +8,7 @@ public class TripStopData {
     private String stopHeadsign ;
     private long departureTime;
     private long predictedDepartureTime;
+    private long arrivalTime;
+    private long predictedArrivalTime;
     private int stopSequence;
 }
