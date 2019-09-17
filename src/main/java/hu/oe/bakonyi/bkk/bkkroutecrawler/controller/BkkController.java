@@ -1,5 +1,6 @@
 package hu.oe.bakonyi.bkk.bkkroutecrawler.controller;
 
+import hu.oe.bakonyi.bkk.bkkroutecrawler.RouteRepository;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.client.BkkRouteClient;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.configuration.BkkConfiguration;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.route.BkkVeichleForRoute;
@@ -10,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.IOException;
 
 @RestController("route")
 public class BkkController {
@@ -22,6 +25,9 @@ public class BkkController {
 
     @Autowired
     WeatherDownloaderService service;
+
+    @Autowired
+    RouteRepository repository;
 
     @GetMapping("route")
     public ResponseEntity<BkkVeichleForRoute> getRoute(@RequestParam("route") String route){
@@ -46,7 +52,13 @@ public class BkkController {
 
     @GetMapping("download")
     public void asd(){
-        service.downloadWeatherData();
+        try {
+            service.getWeatherData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(repository.findAll());
     }
 
 }

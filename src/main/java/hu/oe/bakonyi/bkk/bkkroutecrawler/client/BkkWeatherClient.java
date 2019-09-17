@@ -2,6 +2,7 @@ package hu.oe.bakonyi.bkk.bkkroutecrawler.client;
 
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.weather.Model200;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,3 +19,4 @@ public interface BkkWeatherClient {
     )
     public List<Model200> getWeather(@RequestParam("time") String time);
 }
+

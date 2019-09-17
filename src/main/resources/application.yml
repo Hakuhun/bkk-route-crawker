@@ -1,8 +1,20 @@
-pring:
+spring:
   application:
     name: bkk-route-crawler
   main:
     banner-mode: "off"
+  jpa:
+    ddl-auto: update
+    hibernate:
+      show_sql: true
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+  datasource:
+    url: "jdbc:mysql://localhost:3306/routes?rewriteBatchedStatements=true&useUnicode=yes&characterEncoding=UTF-8"
+    driverClassName: com.mysql.jdbc.Driver
+    username: "spring"
+    password: "spring"
 
 management:
   server:
@@ -46,4 +58,9 @@ bkk:
 weather:
   url: "http://localhost:8001/bkk"
   fileSystemPath: "weatherproperties.json"
-
+  bottomLeftLat: 47.1523107
+  bottomLeftLong: 18.8460594
+  topRightLat: 47.6837053
+  topRightLong: 19.391385500000002
+  chunkWideSize: 10
+  chunkHighSize: 6

@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-09-02T19:31:53.527Z[GMT]")
-public class Model200   {
+public class Model200 {
   @JsonProperty("coord")
   private Coord coord = null;
 

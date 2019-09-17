@@ -1,6 +1,10 @@
 package hu.oe.bakonyi.bkk.bkkroutecrawler.service;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.FeignException;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.client.BkkWeatherClient;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.weather.Model200;
 import lombok.extern.log4j.Log4j2;
@@ -8,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,33 +34,37 @@ public class WeatherDownloaderService {
     @Value("${weather.fileSystemPath}")
     String path;
 
-    public void downloadWeatherData(){
+    public void downloadWeatherData() throws Exception {
         File weatherFile = new File(path);
-        List<Model200> weathers;
+        List<Model200> weathers = null;
         BasicFileAttributes attributes = null;
         try {
             attributes = Files.readAttributes(weatherFile.toPath(),BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
         } catch (IOException e) {
-            log.error("A hoszton nincs még időjárás adat.");
+            log.error("A hoszton nincs még időjárás adat. Időjárási adatok letöltése...");
         }
 
-        if (attributes != null){
-            weathers = client.getWeather(String.valueOf(attributes.creationTime().toInstant().getEpochSecond()));
-        }else{
-            weathers = client.getWeather(String.valueOf("0"));
+        try{
+            if (attributes != null){
+                weathers = client.getWeather(String.valueOf(attributes.creationTime().toInstant().getEpochSecond()));
+            }else{
+                weathers = client.getWeather(String.valueOf("0"));
+            }
+        }catch (FeignException fex){
+            log.error("A kliensen hiba történt. " + fex.getMessage());
         }
 
-        try {
+        if (weathers != null){
             mapper.writeValue(new File(path), weathers);
-            log.info("Időjárási adatok frissítve.");
-        } catch (IOException e) {
-            log.error("Hiba történt az időjárás adatok mentése során.");
-        } catch (Exception ex){
-            log.error(ex.getMessage());
-        }
+        }else throw new Exception("Hiba történt az időjáráskliens megszólítása közben");
     }
 
     public List<Model200> getWeatherData() throws IOException {
+        try {
+            this.downloadWeatherData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Arrays.asList(mapper.readValue(new File(path), Model200[].class));
     }
 
