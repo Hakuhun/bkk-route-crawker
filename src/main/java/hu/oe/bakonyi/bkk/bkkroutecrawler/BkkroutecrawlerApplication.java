@@ -1,10 +1,12 @@
 package hu.oe.bakonyi.bkk.bkkroutecrawler;
 
+import feign.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication()
@@ -15,5 +17,4 @@ public class BkkroutecrawlerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BkkroutecrawlerApplication.class, args);
 	}
-
 }
