@@ -4,19 +4,18 @@ import hu.oe.bakonyi.bkk.bkkroutecrawler.model.Location;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.bkk.BkkBusinessData;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.bkk.BkkData;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.weather.BasicWeatherModel;
-import hu.oe.bakonyi.bkk.bkkroutecrawler.model.weather.Model200;
 import lombok.extern.log4j.Log4j2;
 import net.sf.geographiclib.Geodesic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoField;
-import java.time.temporal.TemporalAccessor;
-import java.time.temporal.TemporalField;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Log4j2

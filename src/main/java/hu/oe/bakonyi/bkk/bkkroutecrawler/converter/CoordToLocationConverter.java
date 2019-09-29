@@ -9,9 +9,6 @@ import org.springframework.core.convert.converter.Converter;
 public class CoordToLocationConverter implements Converter<Coord, Location> {
     @Override
     public Location convert(Coord source) {
-        return new Location(){{
-            setLat(source.getLat());
-            setLon(source.getLon());
-        }};
+        return Location.builder().lon(source.getLon()).lat(source.getLat()).build();
     }
 }
