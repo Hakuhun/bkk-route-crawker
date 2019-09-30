@@ -19,7 +19,7 @@ public class VeichleForRouteModel {
     private boolean deviated;
     private long lastUpdateTime;
     private String status;
-    private double congestionLevel;
+    //private double congestionLevel;
     private String vehicleRouteType;
     private int stopDistancePercent;
     private Capacity capacity;

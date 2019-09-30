@@ -32,10 +32,7 @@ public class BkkBusinessDataService {
     ConversionService conversionService;
 
     public List<BkkBusinessData> getData() throws Exception {
-        List<BkkData> routeDatas = null;
-         routeDatas = routeService.getRouteDatas();
-
-
+        List<BkkData> routeDatas = routeService.getRouteDatas();
         List<BasicWeatherModel> weatherModels = weatherService.getWeatherData();
         List<BkkBusinessData> businessDatas = new ArrayList<>();
 
