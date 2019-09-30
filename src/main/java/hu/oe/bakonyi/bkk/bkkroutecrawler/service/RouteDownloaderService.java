@@ -3,6 +3,7 @@ package hu.oe.bakonyi.bkk.bkkroutecrawler.service;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.client.BkkRouteClient;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.configuration.BkkConfiguration;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.entity.Routes;
+import hu.oe.bakonyi.bkk.bkkroutecrawler.exception.DownloaderDataErrorException;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.bkk.BkkData;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.route.BkkVeichleForRoute;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.route.VeichleForRouteModel;
@@ -12,6 +13,7 @@ import hu.oe.bakonyi.bkk.bkkroutecrawler.repository.RouteRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +31,7 @@ public class RouteDownloaderService {
     @Autowired
     BkkConfiguration configuration;
 
-    public List<BkkData> getRouteDatas() {
+    public List<BkkData> getRouteDatas() throws DownloaderDataErrorException {
         List<BkkData> datas = new ArrayList<>();
 
         for(Routes route : repository.findAll()){
@@ -38,6 +40,11 @@ public class RouteDownloaderService {
             for(VeichleForRouteModel routeData : routeWrapper.getData().getList() ){
                  tripData = this.getTripData(routeData.getTripId(), routeData.getVehicleId());
                  for(TripStopData stopData : tripData.getData().getEntry().getStopTimes()){
+
+                     if (StringUtils.isEmpty(tripData.getData().getEntry().getTripId()) || StringUtils.isEmpty(tripData.getData().getEntry().getVehicle().getVehicleId()) || StringUtils.isEmpty(routeData.getRouteId())){
+                         log.error(new DownloaderDataErrorException(routeData.getRouteId(), tripData.getData().getEntry().getTripId(), tripData.getData().getEntry().getVehicle().getVehicleId()).getMessage());
+                     }
+
                      BkkTripDetails finalTripData = tripData;
                      BkkData detailedStopData = new BkkData(){{
                          setRouteId(routeData.getRouteId());
@@ -64,7 +71,7 @@ public class RouteDownloaderService {
     }
 
     private BkkVeichleForRoute getRouteData(String route){
-        return externalBkkRestClient.getRoute(
+         return externalBkkRestClient.getRoute(
                 configuration.getApiKey(),
                 configuration.getVersion(),
                 configuration.getAppVersion(),

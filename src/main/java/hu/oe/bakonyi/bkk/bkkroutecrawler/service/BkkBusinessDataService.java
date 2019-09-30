@@ -1,5 +1,6 @@
 package hu.oe.bakonyi.bkk.bkkroutecrawler.service;
 
+import hu.oe.bakonyi.bkk.bkkroutecrawler.exception.DownloaderDataErrorException;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.Location;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.bkk.BkkBusinessData;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.bkk.BkkData;
@@ -31,7 +32,10 @@ public class BkkBusinessDataService {
     ConversionService conversionService;
 
     public List<BkkBusinessData> getData() throws Exception {
-        List<BkkData> routeDatas = routeService.getRouteDatas();
+        List<BkkData> routeDatas = null;
+         routeDatas = routeService.getRouteDatas();
+
+
         List<BasicWeatherModel> weatherModels = weatherService.getWeatherData();
         List<BkkBusinessData> businessDatas = new ArrayList<>();
 

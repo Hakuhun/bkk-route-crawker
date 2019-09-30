@@ -1,8 +1,11 @@
 package hu.oe.bakonyi.bkk.bkkroutecrawler.client;
 
+import com.mysql.cj.x.protobuf.MysqlxDatatypes;
+import feign.Headers;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.route.BkkVeichleForRoute;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.trip.BkkTripDetails;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,7 +18,7 @@ public interface BkkRouteClient {
             method = RequestMethod.GET,
             value = "/vehicles-for-route.json"
     )
-    public BkkVeichleForRoute getRoute(@RequestParam("key")String key,
+    public BkkVeichleForRoute getRoute(@RequestParam("key") String key,
                                        @RequestParam("version") int version,
                                        @RequestParam("appVersion") String appVersion,
                                        @RequestParam("includeReferences") String includeReferences,
