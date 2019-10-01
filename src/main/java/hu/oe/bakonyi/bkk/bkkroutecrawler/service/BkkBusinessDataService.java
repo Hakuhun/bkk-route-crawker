@@ -28,9 +28,6 @@ public class BkkBusinessDataService {
     @Autowired
     WeatherDownloaderService weatherService;
 
-    @Autowired
-    ConversionService conversionService;
-
     public List<BkkBusinessData> getData() throws Exception {
         List<BkkData> routeDatas = routeService.getRouteDatas();
         List<BasicWeatherModel> weatherModels = weatherService.getWeatherData();

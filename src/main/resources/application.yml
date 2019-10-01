@@ -63,8 +63,10 @@ scheulder:
 
 bkk:
   apiUrl: "https://futar.bkk.hu/api/query/v1/ws/otp/api/where/"
-  apiKey: "bkk-web"
-  appVersion: "apiary-1.0"
+  #apiUrl: https://futar.bkk.hu/utvonaltervezo-api/ws/otp/api/where/
+  apiKey: bkk-web
+  #appVersion: "apiary-1.0"
+  appVersion: 3.2.4-19639-9a6d560c
   version: 3
 
 weather:
