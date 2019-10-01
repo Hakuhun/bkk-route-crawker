@@ -6,7 +6,12 @@ import lombok.Data;
 @Data
 @Builder
 public class DonwloaderDataError {
-    private String routeId;
-    private String tripId;
-    private String vehicleId;
+    @Builder.Default
+    private String routeId = "";
+    @Builder.Default
+    private String tripId = "";
+    @Builder.Default
+    private String vehicleId = "";
+    @Builder.Default
+    private String stopId = "";
 }

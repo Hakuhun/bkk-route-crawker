@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.exception.model.DonwloaderDataError;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
 public class DownloaderDataErrorException extends Exception{
 
@@ -17,13 +16,13 @@ public class DownloaderDataErrorException extends Exception{
         this.errorObject = errorObject;
     }
 
-    public DownloaderDataErrorException(String route, String trip, String vehicle) {
-        this.errorObject = DonwloaderDataError.builder().routeId(route).tripId(trip).vehicleId(vehicle).build();
+    public DownloaderDataErrorException(String route, String trip, String vehicle, String stop) {
+        this.errorObject = DonwloaderDataError.builder().routeId(route).tripId(trip).vehicleId(vehicle).stopId(stop).build();
     }
 
     @Override
     public String getMessage() {
-        return  "A letoltes soran hiba tortent egy ertek nelkuli valtozo miatt: " + this;
+        return  "A letöltéshez szüséges adatok hiányosak: " + this.toString();
     }
 
     @Override

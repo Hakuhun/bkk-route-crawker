@@ -2,6 +2,7 @@ package hu.oe.bakonyi.bkk.bkkroutecrawler.service;
 
 import hu.oe.bakonyi.bkk.bkkroutecrawler.client.BkkRouteClient;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.configuration.BkkConfiguration;
+import hu.oe.bakonyi.bkk.bkkroutecrawler.converter.BKKDataConverter;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.entity.Routes;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.exception.DownloaderDataErrorException;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.bkk.BkkData;
@@ -31,6 +32,9 @@ public class RouteDownloaderService {
     @Autowired
     BkkConfiguration configuration;
 
+    @Autowired
+    BKKDataConverter converter;
+
     public List<BkkData> getRouteDatas() throws DownloaderDataErrorException {
         List<BkkData> datas = new ArrayList<>();
 
@@ -41,29 +45,15 @@ public class RouteDownloaderService {
                  tripData = this.getTripData(routeData.getTripId(), routeData.getVehicleId());
                  for(TripStopData stopData : tripData.getData().getEntry().getStopTimes()){
 
-                     if (StringUtils.isEmpty(tripData.getData().getEntry().getTripId()) || StringUtils.isEmpty(tripData.getData().getEntry().getVehicle().getVehicleId()) || StringUtils.isEmpty(routeData.getRouteId())){
-                         log.error(new DownloaderDataErrorException(routeData.getRouteId(), tripData.getData().getEntry().getTripId(), tripData.getData().getEntry().getVehicle().getVehicleId()).getMessage());
-                     }
+                     BkkData detailedStopData = null;
 
-                     BkkTripDetails finalTripData = tripData;
-                     BkkData detailedStopData = new BkkData(){{
-                         setRouteId(routeData.getRouteId());
-                         setStopId(stopData.getStopId());
-                         setTripId(finalTripData.getData().getEntry().getTripId());
-                         setVehicleId(finalTripData.getData().getEntry().getVehicle().getVehicleId());
-                         setArrivalTime(stopData.getArrivalTime());
-                         setEstimatedArrivalTime(stopData.getPredictedArrivalTime());
-                         setArrivalDiff(Math.abs(stopData.getArrivalTime()-stopData.getPredictedArrivalTime()));
-                         setDepartureTime(stopData.getDepartureTime());
-                         setEstimatedDepartureTime(stopData.getDepartureTime());
-                         setDepartureDiff(Math.abs(stopData.getDepartureTime()-stopData.getPredictedDepartureTime()));
-                         setLocation(finalTripData.getData().getEntry().getVehicle().getLocation());
-                         setModel(finalTripData.getData().getEntry().getVehicle().getModel());
-                         setStopSequence(stopData.getStopSequence());
-                         setLastUpdateTime(finalTripData.getData().getEntry().getVehicle().getLastUpdateTime());
-                     }};
-                     log.info("Új routeData: ".concat(detailedStopData.toString()));
-                     datas.add(detailedStopData);
+                     try {
+                         detailedStopData = converter.convert(routeData, tripData, stopData);
+                         log.info("Új routeData: ".concat(detailedStopData.toString()));
+                         datas.add(detailedStopData);
+                     }catch(DownloaderDataErrorException ddee){
+                         log.error(ddee.getMessage());
+                     }
                  }
             }
         }
