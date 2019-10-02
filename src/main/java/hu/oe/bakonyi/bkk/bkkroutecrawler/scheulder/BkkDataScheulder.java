@@ -1,5 +1,6 @@
 package hu.oe.bakonyi.bkk.bkkroutecrawler.scheulder;
 
+import hu.oe.bakonyi.bkk.bkkroutecrawler.kafka.KafkaService;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.bkk.BkkBusinessData;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.service.BkkBusinessDataService;
 import lombok.extern.log4j.Log4j2;
@@ -16,6 +17,9 @@ public class BkkDataScheulder {
 
     @Autowired
     BkkBusinessDataService service;
+
+    @Autowired
+    KafkaService kafkaService;
 
     @PostConstruct
     void init(){
@@ -39,6 +43,10 @@ public class BkkDataScheulder {
 
     void doWork() throws Exception {
         List<BkkBusinessData> datas = service.getData();
+
+        datas.forEach(data->{
+            kafkaService.sendMessage(data);
+        });
     }
 
 

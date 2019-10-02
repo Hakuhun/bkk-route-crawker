@@ -15,6 +15,11 @@ spring:
     driverClassName: com.mysql.jdbc.Driver
     username: "spring"
     password: "spring"
+  kafka:
+    producer:
+      bootstrap-servers: sandbox-hdp.hortonworks.com:6667
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
 management:
   server:
