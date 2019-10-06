@@ -12,6 +12,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,8 +41,8 @@ public class BkkBusinessDataService {
             businessData = new BkkBusinessData(){{
                 setBkk(route);
                 setCurrentTime(lastUpdate.getEpochSecond());
-                setDayOfTheWeek(lastUpdate.get(ChronoField.DAY_OF_WEEK));
-                setMonth(lastUpdate.get(ChronoField.MONTH_OF_YEAR));
+                setDayOfTheWeek(lastUpdate.atZone(ZoneId.of("Europe/Budapest")).get(ChronoField.DAY_OF_WEEK));
+                setMonth(lastUpdate.atZone(ZoneId.of("Europe/Budapest")).get(ChronoField.MONTH_OF_YEAR));
                 setLocation(route.getLocation());
                 setWeather(minimalDistance(route.getLocation(), weatherModels));
             }};

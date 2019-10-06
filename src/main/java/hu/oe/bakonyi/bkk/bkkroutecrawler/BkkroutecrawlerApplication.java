@@ -8,9 +8,11 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.kafka.annotation.EnableKafka;
 
 @SpringBootApplication()
 @EnableFeignClients
+@EnableKafka
 @ComponentScan("hu.oe.bakonyi")
 public class BkkroutecrawlerApplication {
 

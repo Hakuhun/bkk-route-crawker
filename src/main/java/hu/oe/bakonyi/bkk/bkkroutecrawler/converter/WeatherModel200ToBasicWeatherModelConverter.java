@@ -8,14 +8,36 @@ import org.springframework.core.convert.converter.Converter;
 public class WeatherModel200ToBasicWeatherModelConverter implements Converter<Model200, BasicWeatherModel> {
     @Override
     public BasicWeatherModel convert(Model200 source) {
-        return new BasicWeatherModel(){{
-            setTemperature(source.getMain().getTemp());
-            setHumidity(source.getMain().getHumidity());
-            setPressure(source.getMain().getPressure());
-            setRainIntensity(source.getRain().get_3h());
-            setSnowIntensity(source.getSnow().get_3h());
-            setVisibility(source.getVisibility());
-            setLocation(Location.builder().lat(source.getCoord().getLat()).lon(source.getCoord().getLon()).build());
-        }};
+        BasicWeatherModel wModel = new BasicWeatherModel();
+
+        if(source.getMain().getTemp() != null){
+            wModel.setTemperature(source.getMain().getTemp());
+        }else{
+            wModel.setTemperature(0);
+        }
+        if(source.getMain().getHumidity() != null){
+            wModel.setHumidity(source.getMain().getHumidity());
+        }
+        if(source.getMain().getPressure() != null){
+            wModel.setPressure(source.getMain().getPressure());
+        }
+        if(source.getRain() != null){
+            wModel.setRainIntensity(source.getRain().get_3h());
+        }else{
+            wModel.setRainIntensity(0);
+        }
+        if(source.getSnow() != null){
+            wModel.setSnowIntensity(source.getSnow().get_3h());
+        }else{
+            wModel.setSnowIntensity(0);
+        }
+        if(source.getVisibility() != null){
+            wModel.setVisibility(source.getVisibility());
+        }
+
+        if (source.getCoord() != null)
+            wModel.setLocation(Location.builder().lat(source.getCoord().getLat()).lon(source.getCoord().getLon()).build());
+
+        return wModel;
     }
 }

@@ -17,9 +17,10 @@ spring:
     password: "spring"
   kafka:
     producer:
-      bootstrap-servers: sandbox-hdp.hortonworks.com:6667
+      #bootstrap-servers: "localhost:6667"
+      bootstrap-servers: "localhost:9092"
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 management:
   server:
