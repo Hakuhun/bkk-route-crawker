@@ -16,7 +16,7 @@ public class SpringFeingConfiguration implements RequestInterceptor {
 
     @Bean
     Logger.Level feignLoggerLevel() {
-        return Logger.Level.FULL;
+        return Logger.Level.BASIC;
     }
 
     @Override

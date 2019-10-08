@@ -4,9 +4,11 @@ import hu.oe.bakonyi.bkk.bkkroutecrawler.model.Location;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.weather.BasicWeatherModel;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.weather.Model200;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Service;
 
-public class WeatherModel200ToBasicWeatherModelConverter implements Converter<Model200, BasicWeatherModel> {
-    @Override
+@Service
+public class WeatherModel200ToBasicWeatherModelConverter{
+
     public BasicWeatherModel convert(Model200 source) {
         BasicWeatherModel wModel = new BasicWeatherModel();
 

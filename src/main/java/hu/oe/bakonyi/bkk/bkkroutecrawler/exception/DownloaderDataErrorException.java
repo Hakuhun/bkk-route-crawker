@@ -3,13 +3,11 @@ package hu.oe.bakonyi.bkk.bkkroutecrawler.exception;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.exception.model.DonwloaderDataError;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@Data
 public class DownloaderDataErrorException extends Exception{
-
-    @Autowired
-    ObjectMapper objectMapper;
-
     DonwloaderDataError errorObject = null;
 
     public DownloaderDataErrorException(DonwloaderDataError errorObject) {
@@ -25,13 +23,4 @@ public class DownloaderDataErrorException extends Exception{
         return  "A letöltéshez szüséges adatok hiányosak: " + this.toString();
     }
 
-    @Override
-    public String toString() {
-        try {
-            return objectMapper.writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
 }

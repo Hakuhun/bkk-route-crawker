@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.FeignException;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.client.BkkWeatherClient;
+import hu.oe.bakonyi.bkk.bkkroutecrawler.converter.WeatherModel200ToBasicWeatherModelConverter;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.Location;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.weather.BasicWeatherModel;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.weather.Model200;
@@ -39,9 +40,9 @@ public class WeatherDownloaderService {
     String path;
 
     @Autowired
-    ConversionService conversionService;
+    WeatherModel200ToBasicWeatherModelConverter conversionService;
 
-    public void downloadWeatherData() throws Exception {
+    public void downloadWeatherData() throws FeignException, IOException {
         File weatherFile = new File(path);
         List<Model200> weathers = null;
         BasicFileAttributes attributes = null;
@@ -63,17 +64,17 @@ public class WeatherDownloaderService {
 
         if (weathers != null){
             mapper.writeValue(new File(path), weathers);
-        }else throw new Exception("Hiba történt az időjáráskliens megszólítása közben");
+        }
     }
 
     public List<BasicWeatherModel> getWeatherData() throws IOException {
         try {
             this.downloadWeatherData();
-        } catch (Exception e) {
+        } catch (FeignException e) {
             e.printStackTrace();
         }
         return  Arrays.asList(mapper.readValue(new File(path), Model200[].class)).stream().map(
-                x -> conversionService.convert(x, BasicWeatherModel.class)).collect(Collectors.toList()
+                x -> conversionService.convert(x)).collect(Collectors.toList()
         );
     }
 

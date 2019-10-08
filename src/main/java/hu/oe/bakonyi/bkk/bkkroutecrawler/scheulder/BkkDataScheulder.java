@@ -4,6 +4,7 @@ import hu.oe.bakonyi.bkk.bkkroutecrawler.kafka.KafkaService;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.bkk.BkkBusinessData;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.service.BkkBusinessDataService;
 import lombok.extern.log4j.Log4j2;
+import org.apache.kafka.common.KafkaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -45,7 +46,13 @@ public class BkkDataScheulder {
         List<BkkBusinessData> datas = service.getData();
 
         datas.forEach(data->{
-            kafkaService.sendMessage(data);
+            try {
+                kafkaService.sendMessage(data);
+            }catch (KafkaException ex){
+                log.error(ex.getMessage());
+            }
+
+            log.info("Kafka üzenet elküldve: " + data);
         });
     }
 

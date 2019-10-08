@@ -12,6 +12,5 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new CoordToLocationConverter());
-        registry.addConverter(new WeatherModel200ToBasicWeatherModelConverter());
     }
 }

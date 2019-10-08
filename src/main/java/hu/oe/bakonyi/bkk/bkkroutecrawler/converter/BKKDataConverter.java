@@ -1,21 +1,21 @@
 package hu.oe.bakonyi.bkk.bkkroutecrawler.converter;
 
 import hu.oe.bakonyi.bkk.bkkroutecrawler.exception.DownloaderDataErrorException;
+import hu.oe.bakonyi.bkk.bkkroutecrawler.exception.model.DonwloaderDataError;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.bkk.BkkData;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.route.VeichleForRouteModel;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.trip.BkkTripDetails;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.trip.TripStopData;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-@Component
+@Service
 public class BKKDataConverter {
 
     public BkkData convert(VeichleForRouteModel routeData, BkkTripDetails tripData, TripStopData stopData) throws DownloaderDataErrorException{
 
-        if (StringUtils.isEmpty(tripData.getData().getEntry().getTripId()) || StringUtils.isEmpty(tripData.getData().getEntry().getVehicle().getVehicleId()) || StringUtils.isEmpty(routeData.getRouteId()) || StringUtils.isEmpty(stopData.getStopId())){
-            throw new DownloaderDataErrorException(routeData.getRouteId(), tripData.getData().getEntry().getTripId(), tripData.getData().getEntry().getVehicle().getVehicleId(), stopData.getStopId());
-        }
+        checkValidity(routeData, tripData, stopData);
 
         return new BkkData(){{
             setRouteId(routeData.getRouteId());
@@ -33,6 +33,34 @@ public class BKKDataConverter {
             setStopSequence(stopData.getStopSequence());
             setLastUpdateTime(tripData.getData().getEntry().getVehicle().getLastUpdateTime());
         }};
+    }
+
+    private void checkValidity(VeichleForRouteModel routeData, BkkTripDetails tripData, TripStopData stopData) throws DownloaderDataErrorException {
+        DonwloaderDataError.DonwloaderDataErrorBuilder builder = DonwloaderDataError.builder();
+
+        boolean isNullAnyParam = false;
+
+        if (tripData != null && !StringUtils.isEmpty(tripData.getData().getEntry().getTripId())){
+            builder.tripId(tripData.getData().getEntry().getTripId());
+        }else {
+            isNullAnyParam = true;
+        }
+
+        if(tripData.getData().getEntry().getVehicle() != null &&  !StringUtils.isEmpty(tripData.getData().getEntry().getVehicle().getVehicleId())){
+            builder.vehicleId(tripData.getData().getEntry().getVehicle().getVehicleId());
+        }else isNullAnyParam = true;
+
+        if(routeData != null && !StringUtils.isEmpty(routeData.getRouteId())){
+            builder.routeId(routeData.getRouteId());
+        }else isNullAnyParam = true;
+
+        if(stopData != null && !StringUtils.isEmpty(stopData.getStopId())){
+            builder.stopId(stopData.getStopId());
+        }else isNullAnyParam = true;
+
+        if(isNullAnyParam){
+            throw new DownloaderDataErrorException(builder.build());
+        }
     }
 
 }
