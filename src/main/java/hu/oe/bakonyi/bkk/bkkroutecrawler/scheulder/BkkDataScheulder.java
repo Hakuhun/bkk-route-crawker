@@ -45,15 +45,15 @@ public class BkkDataScheulder {
     void doWork() throws Exception {
         List<BkkBusinessData> datas = service.getData();
 
-        datas.forEach(data->{
+        for (BkkBusinessData data : datas) {
             try {
                 kafkaService.sendMessage(data);
-            }catch (KafkaException ex){
+            } catch (KafkaException ex) {
                 log.error(ex.getMessage());
             }
 
             log.info("Kafka üzenet elküldve: " + data);
-        });
+        }
     }
 
 

@@ -21,17 +21,18 @@ public class BKKDataConverter {
             setRouteId(routeData.getRouteId());
             setStopId(stopData.getStopId());
             setTripId(tripData.getData().getEntry().getTripId());
-            setVehicleId(tripData.getData().getEntry().getVehicle().getVehicleId());
+            //setVehicleId(tripData.getData().getEntry().getVehicle().getVehicleId());
+            setVehicleId(routeData.getVehicleId());
             setArrivalTime(stopData.getArrivalTime());
             setEstimatedArrivalTime(stopData.getPredictedArrivalTime());
             setArrivalDiff(Math.abs(stopData.getArrivalTime()-stopData.getPredictedArrivalTime()));
             setDepartureTime(stopData.getDepartureTime());
             setEstimatedDepartureTime(stopData.getDepartureTime());
             setDepartureDiff(Math.abs(stopData.getDepartureTime()-stopData.getPredictedDepartureTime()));
-            setLocation(tripData.getData().getEntry().getVehicle().getLocation());
-            setModel(tripData.getData().getEntry().getVehicle().getModel());
+            setLocation(routeData.getLocation());
+            setModel(routeData.getModel());
             setStopSequence(stopData.getStopSequence());
-            setLastUpdateTime(tripData.getData().getEntry().getVehicle().getLastUpdateTime());
+            setLastUpdateTime(routeData.getLastUpdateTime());
         }};
     }
 
@@ -46,11 +47,11 @@ public class BKKDataConverter {
             isNullAnyParam = true;
         }
 
-        if(tripData.getData().getEntry().getVehicle() != null &&  !StringUtils.isEmpty(tripData.getData().getEntry().getVehicle().getVehicleId())){
-            builder.vehicleId(tripData.getData().getEntry().getVehicle().getVehicleId());
+        if(!StringUtils.isEmpty(routeData.getVehicleId())){
+            builder.vehicleId(routeData.getVehicleId());
         }else isNullAnyParam = true;
 
-        if(routeData != null && !StringUtils.isEmpty(routeData.getRouteId())){
+        if(!StringUtils.isEmpty(routeData.getRouteId())){
             builder.routeId(routeData.getRouteId());
         }else isNullAnyParam = true;
 

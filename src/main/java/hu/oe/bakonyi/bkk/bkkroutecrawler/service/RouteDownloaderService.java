@@ -41,7 +41,7 @@ public class RouteDownloaderService {
         for(Routes route : repository.findAll()){
             BkkVeichleForRoute routeWrapper = this.getRouteData(route.getRouteCode());
 
-            if(routeWrapper == null || routeWrapper.getData() == null) break;
+             if(routeWrapper == null || routeWrapper.getData() == null) break;
 
             BkkTripDetails tripData = null;
             for(VeichleForRouteModel routeData : routeWrapper.getData().getList() ){

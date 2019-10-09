@@ -10,6 +10,5 @@ public class BkkTripDetailsDataEntry {
     private String tripId;
     private String serviceDate;
 
-    private TripVeichleData vehicle;
     private List<TripStopData> stopTimes;
 }
