@@ -32,9 +32,9 @@ public class BkkDataScheulder {
         }
     }
 
-    @Scheduled(fixedRate = 300000)
+    @Scheduled(cron = "${scheulder.bkkkScheulder}")
     public void bkkDataScheulder(){
-        try {
+      try {
             doWork();
         } catch (Exception e) {
             log.error(e.getMessage());

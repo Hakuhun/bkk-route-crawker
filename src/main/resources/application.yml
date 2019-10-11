@@ -65,7 +65,7 @@ logging:
                 BkkRouteClient: DEBUG
 
 scheulder:
-  bkkkScheulder:  "0 0/5 0 ? * * *"
+  bkkkScheulder:  "0 */5 * ? * *"
 
 bkk:
   apiUrl: "https://futar.bkk.hu/api/query/v1/ws/otp/api/where/"
