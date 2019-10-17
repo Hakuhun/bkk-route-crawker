@@ -2,6 +2,7 @@ package hu.oe.bakonyi.bkk.bkkroutecrawler.scheulder;
 
 import hu.oe.bakonyi.bkk.bkkroutecrawler.kafka.KafkaService;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.bkk.BkkBusinessData;
+import hu.oe.bakonyi.bkk.bkkroutecrawler.model.bkk.BkkBusinessDataV2;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.service.BkkBusinessDataService;
 import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.common.KafkaException;
@@ -10,7 +11,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Component
@@ -43,9 +50,9 @@ public class BkkDataScheulder {
     }
 
     void doWork() throws Exception {
-        List<BkkBusinessData> datas = service.getData();
+        List<BkkBusinessDataV2> datas = getTableFormat(service.getData());
 
-        for (BkkBusinessData data : datas) {
+        for (BkkBusinessDataV2 data : datas) {
             try {
                 kafkaService.sendMessage(data);
             } catch (KafkaException ex) {
@@ -56,5 +63,9 @@ public class BkkDataScheulder {
         }
     }
 
+    List<BkkBusinessDataV2> getTableFormat(List<BkkBusinessData> data){
+        List<BkkBusinessDataV2> v2 = data.stream().map(BkkBusinessDataV2::new).collect(Collectors.toList());
+        return v2;
+    }
 
 }

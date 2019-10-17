@@ -12,4 +12,5 @@ public class BkkBusinessData {
     private long currentTime;
     private int month;
     private int dayOfTheWeek;
+    private double value;
 }

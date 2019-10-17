@@ -14,10 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.temporal.ChronoField;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Log4j2
@@ -44,6 +41,7 @@ public class BkkBusinessDataService {
                 setDayOfTheWeek(lastUpdate.atZone(ZoneId.of("Europe/Budapest")).get(ChronoField.DAY_OF_WEEK));
                 setMonth(lastUpdate.atZone(ZoneId.of("Europe/Budapest")).get(ChronoField.MONTH_OF_YEAR));
                 setLocation(route.getLocation());
+                setValue(avg(route.getArrivalDiff(), route.getDepartureDiff()));
                 setWeather(minimalDistance(route.getLocation(), weatherModels));
             }};
             businessDatas.add(businessData);
@@ -83,4 +81,7 @@ public class BkkBusinessDataService {
         return distances.get(min);
     }
 
+    double avg(double... numbers){
+        return Arrays.stream(numbers).average().getAsDouble();
+    }
 }

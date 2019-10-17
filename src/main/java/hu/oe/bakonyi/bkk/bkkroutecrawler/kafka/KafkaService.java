@@ -2,6 +2,7 @@ package hu.oe.bakonyi.bkk.bkkroutecrawler.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.bkk.BkkBusinessData;
+import hu.oe.bakonyi.bkk.bkkroutecrawler.model.bkk.BkkBusinessDataV2;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -18,12 +19,12 @@ public class KafkaService {
     private static final String TOPIC = "bkk";
 
     @Autowired
-    private KafkaTemplate<String, BkkBusinessData> kafkaTemplate;
+    private KafkaTemplate<String, BkkBusinessDataV2> kafkaTemplate;
 
     @Autowired
     private ObjectMapper mapper;
 
-    public void sendMessage(BkkBusinessData msg){
+    public void sendMessage(BkkBusinessDataV2 msg){
         log.info(String.format("$$ -> Producing message --> %s",msg));
 /*        Message<BkkBusinessData> message = MessageBuilder
                 .withPayload(msg)
