@@ -10,6 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class DownloaderDataErrorException extends Exception{
     DonwloaderDataError errorObject = null;
 
+    public DownloaderDataErrorException() {
+        this.errorObject = DonwloaderDataError.builder().routeId("").tripId("").vehicleId("").stopId("").build();
+    }
+
     public DownloaderDataErrorException(DonwloaderDataError errorObject) {
         this.errorObject = errorObject;
     }

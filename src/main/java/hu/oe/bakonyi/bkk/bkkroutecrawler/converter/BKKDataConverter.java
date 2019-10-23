@@ -41,6 +41,10 @@ public class BKKDataConverter {
 
         boolean isNullAnyParam = false;
 
+        if(routeData.getStatus().equals("NOT_FOUND")){
+            throw new DownloaderDataErrorException(builder.build());
+        }
+
         if (tripData != null && !StringUtils.isEmpty(tripData.getData().getEntry().getTripId())){
             builder.tripId(tripData.getData().getEntry().getTripId());
         }else {

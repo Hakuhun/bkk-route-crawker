@@ -10,6 +10,7 @@ public class BkkBusinessDataV2 {
     private double departureDiff, arrivalDiff, value = 0;
     private String routeId, stopId, vehicleModel, tripId;
     private int month, dayOfWeek;
+    private Long lastUpdateTime;
 
     public BkkBusinessDataV2(BkkBusinessData v1) {
         this.routeId = v1.getBkk().getRouteId();
@@ -29,5 +30,6 @@ public class BkkBusinessDataV2 {
         this.departureDiff = v1.getBkk().getDepartureDiff();
         this.arrivalDiff = v1.getBkk().getArrivalDiff();
         this.tripId = v1.getBkk().getTripId();
+        this.lastUpdateTime = v1.getCurrentTime();
     }
 }

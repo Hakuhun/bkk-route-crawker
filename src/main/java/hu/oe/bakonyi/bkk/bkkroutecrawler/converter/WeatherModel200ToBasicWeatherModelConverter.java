@@ -23,7 +23,7 @@ public class WeatherModel200ToBasicWeatherModelConverter{
         if(source.getMain().getPressure() != null){
             wModel.setPressure(source.getMain().getPressure());
         }
-        if(source.getRain() != null){
+        if(source.getRain()!= null){
             wModel.setRainIntensity(source.getRain().get_3h());
         }else{
             wModel.setRainIntensity(0);
