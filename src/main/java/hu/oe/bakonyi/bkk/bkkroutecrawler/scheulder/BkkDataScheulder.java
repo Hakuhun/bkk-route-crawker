@@ -55,11 +55,10 @@ public class BkkDataScheulder {
         for (BkkBusinessDataV2 data : datas) {
             try {
                 kafkaService.sendMessage(data);
+                log.info("Kafka üzenet elküldve: " + data);
             } catch (KafkaException ex) {
                 log.error(ex.getMessage());
             }
-
-            log.info("Kafka üzenet elküldve: " + data);
         }
     }
 

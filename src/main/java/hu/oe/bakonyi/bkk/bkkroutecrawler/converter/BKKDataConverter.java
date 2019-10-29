@@ -41,7 +41,7 @@ public class BKKDataConverter {
 
         boolean isNullAnyParam = false;
 
-        if(!routeData.getStatus().equals("OK")){
+        if(routeData.getStatus().equals("NOT_FOUND")){
             throw new DownloaderDataErrorException(builder.build());
         }
 

@@ -12,6 +12,10 @@ public class WeatherModel200ToBasicWeatherModelConverter{
     public BasicWeatherModel convert(Model200 source) {
         BasicWeatherModel wModel = new BasicWeatherModel();
 
+        if(source == null){
+            return null;
+        }
+
         if(source.getMain().getTemp() != null){
             wModel.setTemperature(source.getMain().getTemp());
         }else{
@@ -23,7 +27,7 @@ public class WeatherModel200ToBasicWeatherModelConverter{
         if(source.getMain().getPressure() != null){
             wModel.setPressure(source.getMain().getPressure());
         }
-        if(source.getRain()!= null){
+        if(source.getRain()!= null && source.getRain().get_3h() !=null){
             wModel.setRainIntensity(source.getRain().get_3h());
         }else{
             wModel.setRainIntensity(0);
@@ -35,10 +39,12 @@ public class WeatherModel200ToBasicWeatherModelConverter{
         }
         if(source.getVisibility() != null){
             wModel.setVisibility(source.getVisibility());
+        }else{
+            wModel.setVisibility(0);
         }
-
-        if (source.getCoord() != null)
+        if (source.getCoord() != null){
             wModel.setLocation(Location.builder().lat(source.getCoord().getLat()).lon(source.getCoord().getLon()).build());
+        }
 
         return wModel;
     }
