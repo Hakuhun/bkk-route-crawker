@@ -6,16 +6,22 @@ import hu.oe.bakonyi.bkk.bkkroutecrawler.model.bkk.BkkData;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.route.VeichleForRouteModel;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.trip.BkkTripDetails;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.trip.TripStopData;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 @Service
+@Log4j2
 public class BKKDataConverter {
 
     public BkkData convert(VeichleForRouteModel routeData, BkkTripDetails tripData, TripStopData stopData) throws DownloaderDataErrorException{
 
         checkValidity(routeData, tripData, stopData);
+
+        log.info("ROUTE: " + routeData.getRouteId() + " TRIP : " + routeData.getTripId());
+        log.info("Érkezés: " +stopData.getArrivalTime() + " - " + stopData.getPredictedArrivalTime() + " = " +  Math.abs(stopData.getArrivalTime()-stopData.getPredictedArrivalTime()));
+        log.info("Távozás: " +stopData.getDepartureTime() + " - " + stopData.getPredictedDepartureTime() + " = " +  Math.abs(stopData.getDepartureTime()-stopData.getPredictedDepartureTime()));
 
         return new BkkData(){{
             setRouteId(routeData.getRouteId());

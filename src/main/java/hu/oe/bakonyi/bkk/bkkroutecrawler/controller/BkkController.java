@@ -6,6 +6,7 @@ import hu.oe.bakonyi.bkk.bkkroutecrawler.client.BkkRouteClient;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.configuration.BkkConfiguration;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.route.BkkVeichleForRoute;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.trip.BkkTripDetails;
+import hu.oe.bakonyi.bkk.bkkroutecrawler.scheulder.BkkDataScheulder;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.service.WeatherDownloaderService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ public class BkkController {
     @Autowired
     RouteRepository repository;
 
+    @Autowired
+    BkkDataScheulder scheulder;
+
     @GetMapping("route")
     public ResponseEntity<BkkVeichleForRoute> getRoute(@RequestParam("route") String route){
         try{
@@ -41,6 +45,11 @@ public class BkkController {
             fe.printStackTrace();
         }
         return null;
+    }
+
+    @GetMapping("call")
+    public void call(){
+        scheulder.bkkDataScheulder();
     }
 
     @GetMapping("trip")

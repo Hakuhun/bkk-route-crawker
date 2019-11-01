@@ -1,5 +1,8 @@
 package hu.oe.bakonyi.bkk.bkkroutecrawler.service;
 
+import hu.oe.bakonyi.bkk.bkkroutecrawler.client.BkkWeatherClient;
+import hu.oe.bakonyi.bkk.bkkroutecrawler.converter.CoordToLocationConverter;
+import hu.oe.bakonyi.bkk.bkkroutecrawler.converter.WeatherModel200ToBasicWeatherModelConverter;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.exception.DownloaderDataErrorException;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.Location;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.bkk.BkkBusinessData;
@@ -26,9 +29,18 @@ public class BkkBusinessDataService {
     @Autowired
     WeatherDownloaderService weatherService;
 
+    @Autowired
+    BkkWeatherClient weatherClient;
+
+    @Autowired
+    CoordToLocationConverter converter;
+
+    @Autowired
+    WeatherModel200ToBasicWeatherModelConverter weatherModelConverter;
+
     public List<BkkBusinessData> getData() throws Exception {
         List<BkkData> routeDatas = routeService.getRouteDatas();
-        List<BasicWeatherModel> weatherModels = weatherService.getWeatherData();
+        //List<BasicWeatherModel> weatherModels = weatherService.getWeatherData();
         List<BkkBusinessData> businessDatas = new ArrayList<>();
 
         BkkBusinessData businessData = null;
@@ -42,7 +54,8 @@ public class BkkBusinessDataService {
                 setMonth(lastUpdate.atZone(ZoneId.of("Europe/Budapest")).get(ChronoField.MONTH_OF_YEAR));
                 setLocation(route.getLocation());
                 setValue(avg(route.getArrivalDiff(), route.getDepartureDiff()));
-                setWeather(minimalDistance(route.getLocation(), weatherModels));
+                //setWeather(minimalDistance(route.getLocation(), weatherModels));
+                setWeather(weatherModelConverter.convert(weatherClient.getWeatherByCoord(converter.toCoord(route.getLocation()))));
             }};
             businessDatas.add(businessData);
         }
