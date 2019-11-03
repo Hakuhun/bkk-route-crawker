@@ -17,9 +17,9 @@ import java.math.BigDecimal;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-09-02T19:31:53.527Z[GMT]")
 public class Coord   {
   @JsonProperty("lon")
-  private Double lon = null;
+  private Double lon;
 
   @JsonProperty("lat")
-  private Double lat = null;
+  private Double lat;
 
 }

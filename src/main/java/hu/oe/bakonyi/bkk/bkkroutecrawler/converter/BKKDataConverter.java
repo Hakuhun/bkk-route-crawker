@@ -6,18 +6,22 @@ import hu.oe.bakonyi.bkk.bkkroutecrawler.model.bkk.BkkData;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.route.VeichleForRouteModel;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.trip.BkkTripDetails;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.trip.TripStopData;
+import hu.oe.bakonyi.bkk.bkkroutecrawler.service.RouteDownloaderService;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.util.List;
 
 @Service
 @Log4j2
 public class BKKDataConverter {
 
-    public BkkData convert(VeichleForRouteModel routeData, BkkTripDetails tripData, TripStopData stopData) throws DownloaderDataErrorException{
+    public BkkData convert(VeichleForRouteModel routeData, BkkTripDetails tripData, TripStopData stopData, List<String> statuses, boolean alert) throws DownloaderDataErrorException{
 
-        checkValidity(routeData, tripData, stopData);
+        checkValidity(routeData, tripData, stopData, statuses);
 
         log.info("ROUTE: " + routeData.getRouteId() + " TRIP : " + routeData.getTripId());
         log.info("Érkezés: " +stopData.getArrivalTime() + " - " + stopData.getPredictedArrivalTime() + " = " +  Math.abs(stopData.getArrivalTime()-stopData.getPredictedArrivalTime()));
@@ -39,16 +43,21 @@ public class BKKDataConverter {
             setModel(routeData.getModel());
             setStopSequence(stopData.getStopSequence());
             setLastUpdateTime(routeData.getLastUpdateTime());
+            setAlert(alert);
         }};
     }
 
-    private void checkValidity(VeichleForRouteModel routeData, BkkTripDetails tripData, TripStopData stopData) throws DownloaderDataErrorException {
+    private void checkValidity(VeichleForRouteModel routeData, BkkTripDetails tripData, TripStopData stopData, List<String> status) throws DownloaderDataErrorException {
         DonwloaderDataError.DonwloaderDataErrorBuilder builder = DonwloaderDataError.builder();
 
         boolean isNullAnyParam = false;
 
-        if(routeData.getStatus().equals("NOT_FOUND")){
-            throw new DownloaderDataErrorException(builder.build());
+        if(status.contains("NOT_FOUND")){
+            throw new DownloaderDataErrorException(HttpStatus.NOT_FOUND ,builder.build());
+        }
+
+        if(status.contains("NOT_OPERATING")){
+            throw new DownloaderDataErrorException(HttpStatus.NO_CONTENT ,builder.build());
         }
 
         if (tripData != null && !StringUtils.isEmpty(tripData.getData().getEntry().getTripId())){
@@ -70,7 +79,7 @@ public class BKKDataConverter {
         }else isNullAnyParam = true;
 
         if(isNullAnyParam){
-            throw new DownloaderDataErrorException(builder.build());
+            throw new DownloaderDataErrorException(HttpStatus.NO_CONTENT, builder.build());
         }
     }
 

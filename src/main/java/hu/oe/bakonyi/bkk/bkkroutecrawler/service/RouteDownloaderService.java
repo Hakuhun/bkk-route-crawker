@@ -13,10 +13,16 @@ import hu.oe.bakonyi.bkk.bkkroutecrawler.model.trip.TripStopData;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.repository.RouteRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -35,6 +41,40 @@ public class RouteDownloaderService {
     @Autowired
     BKKDataConverter converter;
 
+    public List<BkkData> getRouteDataForRoute(String routeId) throws DownloaderDataErrorException{
+        List<BkkData> datas = new ArrayList<>();
+        List<String> httpStatuses = new ArrayList<>();
+
+        BkkVeichleForRoute routeWrapper = this.getRouteData(routeId);
+        httpStatuses.add(routeWrapper.getStatus());
+
+        if(routeWrapper.getData() == null || routeWrapper.getStatus().equals("NOT_FOUND")){
+            throw new DownloaderDataErrorException(HttpStatus.NOT_FOUND,"A "+ routeId + " viszonylatazonosítóhoz nem található adat.");
+        }
+
+        BkkTripDetails tripData = null;
+        for(VeichleForRouteModel routeData : routeWrapper.getData().getList() ){
+
+            tripData = this.getTripData(routeData.getTripId(), routeData.getVehicleId(), routeData.getServiceDate());
+
+            httpStatuses.add(tripData.getStatus());
+            if(tripData.getData() != null){
+                for(TripStopData stopData : tripData.getData().getEntry().getStopTimes()){
+                    boolean alert = getAlert(tripData, routeData.getRouteId(), stopData.getStopId());
+                    BkkData detailedStopData = null;
+                    try{
+                        detailedStopData = converter.convert(routeData, tripData, stopData, httpStatuses, alert);
+                        log.info("Új routeData: ".concat(detailedStopData.toString()));
+                        datas.add(detailedStopData);
+                    }catch (DownloaderDataErrorException ex){
+                        log.error(ex.getMessage());
+                    }
+                }
+            }
+        }
+        return datas;
+    }
+
     public List<BkkData> getRouteDatas() throws DownloaderDataErrorException {
         List<BkkData> datas = new ArrayList<>();
 
@@ -46,15 +86,18 @@ public class RouteDownloaderService {
             BkkTripDetails tripData = null;
             for(VeichleForRouteModel routeData : routeWrapper.getData().getList() ){
 
-                 tripData = this.getTripData(routeData.getTripId(), routeData.getVehicleId());
+                 tripData = this.getTripData(routeData.getTripId(), routeData.getVehicleId(), routeData.getServiceDate());
                  if(tripData == null || tripData.getData() == null) break;
 
+                tripData = this.getTripData(routeData.getTripId(), routeData.getVehicleId(), routeData.getServiceDate());
+
                  for(TripStopData stopData : tripData.getData().getEntry().getStopTimes()){
+                     boolean alert = getAlert(tripData, routeData.getRouteId(), stopData.getStopId());
 
                      BkkData detailedStopData = null;
 
                      try {
-                         detailedStopData = converter.convert(routeData, tripData, stopData);
+                         detailedStopData = converter.convert(routeData, tripData, stopData, Arrays.asList(""), false);
                          log.info("Új routeData: ".concat(detailedStopData.toString()));
                          datas.add(detailedStopData);
                      }catch(DownloaderDataErrorException ddee){
@@ -66,26 +109,35 @@ public class RouteDownloaderService {
         return datas;
     }
 
+    boolean getAlert(BkkTripDetails tripData, String route, String stop){
+        boolean alert = false;
+        if (tripData.getData().getReferences() != null && tripData.getData().getReferences().getAlerts() != null)
+            alert = tripData.getData().getReferences().getAlerts().values().stream().anyMatch(x -> x.getRouteIds().contains(route) && x.getStopIds().contains(stop));
+        return alert;
+    }
+
     private BkkVeichleForRoute getRouteData(String route){
          return externalBkkRestClient.getRoute(
                 configuration.getApiKey(),
                 configuration.getVersion(),
                 configuration.getAppVersion(),
-                "false",
+                "alerts",
                 route,
                 false
         );
     }
 
-    private BkkTripDetails getTripData(String trip, String veichle){
+    private BkkTripDetails getTripData(String trip, String veichle, String date){
+
         return externalBkkRestClient.getTrip(
                 configuration.getApiKey(),
                 configuration.getVersion(),
                 configuration.getAppVersion(),
-                "false",
+                "alerts",
                 trip,
                 veichle,
-                false
+                false,
+                date
         );
     }
 }

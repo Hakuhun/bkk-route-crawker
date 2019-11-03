@@ -54,7 +54,7 @@ public class BkkDataScheulder {
 
         for (BkkBusinessDataV2 data : datas) {
             try {
-                kafkaService.sendMessage(data);
+                //kafkaService.sendMessage(data);
             } catch (KafkaException ex) {
                 log.error(ex.getMessage());
             }

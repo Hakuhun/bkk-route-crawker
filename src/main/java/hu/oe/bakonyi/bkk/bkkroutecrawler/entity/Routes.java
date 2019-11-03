@@ -24,10 +24,4 @@ public class Routes implements Serializable {
 
     @Column(name = "routeType")
     private String routeType;
-
-    @Column(name = "startTime")
-    private Date startTime;
-
-    @Column(name = "endTime")
-    private Date endTime;
 }

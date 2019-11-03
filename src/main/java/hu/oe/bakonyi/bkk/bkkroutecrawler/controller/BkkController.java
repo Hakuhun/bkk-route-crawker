@@ -1,25 +1,31 @@
 package hu.oe.bakonyi.bkk.bkkroutecrawler.controller;
 
 import feign.FeignException;
+import hu.oe.bakonyi.bkk.bkkroutecrawler.entity.Routes;
+import hu.oe.bakonyi.bkk.bkkroutecrawler.model.bkk.BkkData;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.repository.RouteRepository;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.client.BkkRouteClient;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.configuration.BkkConfiguration;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.route.BkkVeichleForRoute;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.trip.BkkTripDetails;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.scheulder.BkkDataScheulder;
+import hu.oe.bakonyi.bkk.bkkroutecrawler.service.RouteDownloaderService;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.service.WeatherDownloaderService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.*;
+import java.time.temporal.ChronoField;
+import java.time.temporal.TemporalField;
+import java.util.List;
+
 @Log4j2
 @RestController("route")
 public class BkkController {
-
     @Autowired
     BkkRouteClient externalBkkRestClient;
 
@@ -27,7 +33,10 @@ public class BkkController {
     BkkConfiguration configuration;
 
     @Autowired
-    WeatherDownloaderService service;
+    WeatherDownloaderService weatherService;
+
+    @Autowired
+    RouteDownloaderService bkkService;
 
     @Autowired
     RouteRepository repository;
@@ -35,7 +44,7 @@ public class BkkController {
     @Autowired
     BkkDataScheulder scheulder;
 
-    @GetMapping("route")
+    @GetMapping("dev/route")
     public ResponseEntity<BkkVeichleForRoute> getRoute(@RequestParam("route") String route){
         try{
             BkkVeichleForRoute routeData = externalBkkRestClient.getRoute(configuration.getApiKey(), configuration.getVersion(), configuration.getAppVersion(), "false", route, false);
@@ -47,35 +56,60 @@ public class BkkController {
         return null;
     }
 
-    @GetMapping("call")
+    @GetMapping("dev/call")
     public void call(){
         scheulder.bkkDataScheulder();
     }
 
-    @GetMapping("trip")
-    public ResponseEntity<BkkTripDetails> getTrip(@RequestParam("vehicle") String veichle, @RequestParam("trip") String trip){
+    @GetMapping("dev/trip")
+    public ResponseEntity<BkkTripDetails> getTrip(@RequestParam("vehicle") String veichle,
+                                                  @RequestParam("trip") String trip,
+                                                  @RequestParam("date") String date
+    ){
+        if(date.isEmpty()){
+            Instant instant = Instant.now();
+            LocalDate time = instant.atZone(ZoneOffset.UTC).toLocalDate();
+            date = time.getYear() + time.getMonthValue() + time.getDayOfMonth()+"";
+        }
+
         BkkTripDetails tripData = externalBkkRestClient.getTrip(
                 configuration.getApiKey(),
                 configuration.getVersion(),
                 configuration.getAppVersion(),
-                "false",
+                "alerts",
                 trip,
                 veichle,
-                false
+                false,
+                date
         );
 
         return ResponseEntity.ok(tripData);
     }
 
-    @GetMapping("download")
-    public void asd(){
-        try {
-            service.getWeatherData();
-        } catch (IOException e) {
-            e.printStackTrace();
+    @GetMapping("prod/route")
+    public ResponseEntity<List<BkkData>> getRouteTripData(@RequestParam("route") String route){
+        return ResponseEntity.ok(bkkService.getRouteDataForRoute(route));
+    }
+
+    @PostMapping("dev/route")
+    @Transactional
+    public ResponseEntity<Routes> addNewRoute(@RequestBody Routes routes){
+        List<Routes> storedRoutes = repository.findRoutesByRouteCode(routes.getRouteCode());
+        Routes saved = null;
+
+        if(storedRoutes.isEmpty()){
+            saved = repository.save(routes);
+        }else{
+            repository.deleteAll(storedRoutes);
+            saved = repository.save(routes);
         }
 
-        System.out.println(repository.findAll());
+        return ResponseEntity.ok(saved);
+    }
+
+    @GetMapping("prod/routes")
+    public ResponseEntity<Iterable<Routes>> getAllStoredRoutes(){
+        return ResponseEntity.ok(repository.findAll());
     }
 
 }

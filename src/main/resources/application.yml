@@ -50,7 +50,7 @@ feign:
       default:
         connectTimeout: 5000
         readTimeout: 5000
-        loggerLevel: FULL
+        loggerLevel: BASIC
   httpclient:
     follow-redirects: false
 
@@ -85,3 +85,5 @@ weather:
   chunkWideSize: 10
   chunkHighSize: 6
 
+api:
+  key: "2e825506-7aea-4fe1-ad48-5fa87b4ce726"

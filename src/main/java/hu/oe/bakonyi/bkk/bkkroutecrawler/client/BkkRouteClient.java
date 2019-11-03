@@ -36,6 +36,8 @@ public interface BkkRouteClient {
                                   @RequestParam("includeReferences") String includeReferences,
                                   @RequestParam("tripId") String tripId,
                                   @RequestParam("veichleId") String veichleId,
-                                  @RequestParam("related") boolean related
+                                  @RequestParam("related") boolean related,
+                                  @RequestParam("date") String date
                         );
+
 }

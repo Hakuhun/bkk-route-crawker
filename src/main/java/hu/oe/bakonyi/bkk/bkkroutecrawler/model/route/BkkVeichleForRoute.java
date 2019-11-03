@@ -9,4 +9,5 @@ public class BkkVeichleForRoute extends BkkBaseModel {
     private BkkVeichleForRouteData data;
     private boolean outOfRange;
     private boolean limitExceeded;
+
 }

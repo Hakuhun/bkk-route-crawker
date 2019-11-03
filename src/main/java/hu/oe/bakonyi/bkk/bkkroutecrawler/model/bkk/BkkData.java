@@ -19,4 +19,5 @@ public class BkkData {
     private long departureDiff;
     private long arrivalDiff;
     private String model;
+    private boolean alert;
 }
