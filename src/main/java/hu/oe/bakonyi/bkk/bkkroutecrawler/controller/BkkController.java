@@ -1,26 +1,23 @@
 package hu.oe.bakonyi.bkk.bkkroutecrawler.controller;
 
 import feign.FeignException;
-import hu.oe.bakonyi.bkk.bkkroutecrawler.entity.Routes;
-import hu.oe.bakonyi.bkk.bkkroutecrawler.model.bkk.BkkData;
-import hu.oe.bakonyi.bkk.bkkroutecrawler.repository.RouteRepository;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.client.BkkRouteClient;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.configuration.BkkConfiguration;
+import hu.oe.bakonyi.bkk.bkkroutecrawler.entity.Routes;
+import hu.oe.bakonyi.bkk.bkkroutecrawler.model.bkk.BkkData;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.route.BkkVeichleForRoute;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.trip.BkkTripDetails;
-import hu.oe.bakonyi.bkk.bkkroutecrawler.scheulder.BkkDataScheulder;
+import hu.oe.bakonyi.bkk.bkkroutecrawler.repository.RouteRepository;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.service.RouteDownloaderService;
-import hu.oe.bakonyi.bkk.bkkroutecrawler.service.WeatherDownloaderService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.time.*;
-import java.time.temporal.ChronoField;
-import java.time.temporal.TemporalField;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.List;
 
 @Log4j2
@@ -33,16 +30,10 @@ public class BkkController {
     BkkConfiguration configuration;
 
     @Autowired
-    WeatherDownloaderService weatherService;
-
-    @Autowired
     RouteDownloaderService bkkService;
 
     @Autowired
     RouteRepository repository;
-
-    @Autowired
-    BkkDataScheulder scheulder;
 
     @GetMapping("dev/route")
     public ResponseEntity<BkkVeichleForRoute> getRoute(@RequestParam("route") String route){
@@ -54,11 +45,6 @@ public class BkkController {
             fe.printStackTrace();
         }
         return null;
-    }
-
-    @GetMapping("dev/call")
-    public void call(){
-        scheulder.bkkDataScheulder();
     }
 
     @GetMapping("dev/trip")

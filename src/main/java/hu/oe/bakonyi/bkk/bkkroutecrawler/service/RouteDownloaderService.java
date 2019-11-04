@@ -57,7 +57,7 @@ public class RouteDownloaderService {
 
             tripData = this.getTripData(routeData.getTripId(), routeData.getVehicleId(), routeData.getServiceDate());
 
-            httpStatuses.add(tripData.getStatus());
+           httpStatuses.add(tripData.getStatus());
             if(tripData.getData() != null){
                 for(TripStopData stopData : tripData.getData().getEntry().getStopTimes()){
                     boolean alert = getAlert(tripData, routeData.getRouteId(), stopData.getStopId());
@@ -70,40 +70,6 @@ public class RouteDownloaderService {
                         log.error(ex.getMessage());
                     }
                 }
-            }
-        }
-        return datas;
-    }
-
-    public List<BkkData> getRouteDatas() throws DownloaderDataErrorException {
-        List<BkkData> datas = new ArrayList<>();
-
-        for(Routes route : repository.findAll()){
-            BkkVeichleForRoute routeWrapper = this.getRouteData(route.getRouteCode());
-
-             if(routeWrapper == null || routeWrapper.getData() == null) break;
-
-            BkkTripDetails tripData = null;
-            for(VeichleForRouteModel routeData : routeWrapper.getData().getList() ){
-
-                 tripData = this.getTripData(routeData.getTripId(), routeData.getVehicleId(), routeData.getServiceDate());
-                 if(tripData == null || tripData.getData() == null) break;
-
-                tripData = this.getTripData(routeData.getTripId(), routeData.getVehicleId(), routeData.getServiceDate());
-
-                 for(TripStopData stopData : tripData.getData().getEntry().getStopTimes()){
-                     boolean alert = getAlert(tripData, routeData.getRouteId(), stopData.getStopId());
-
-                     BkkData detailedStopData = null;
-
-                     try {
-                         detailedStopData = converter.convert(routeData, tripData, stopData, Arrays.asList(""), false);
-                         log.info("Új routeData: ".concat(detailedStopData.toString()));
-                         datas.add(detailedStopData);
-                     }catch(DownloaderDataErrorException ddee){
-                         log.error(ddee.getMessage());
-                     }
-                 }
             }
         }
         return datas;
@@ -127,7 +93,7 @@ public class RouteDownloaderService {
         );
     }
 
-    private BkkTripDetails getTripData(String trip, String veichle, String date){
+    private BkkTripDetails getTripData(String trip, String vehicle, String date){
 
         return externalBkkRestClient.getTrip(
                 configuration.getApiKey(),
@@ -135,7 +101,7 @@ public class RouteDownloaderService {
                 configuration.getAppVersion(),
                 "alerts",
                 trip,
-                veichle,
+                vehicle,
                 false,
                 date
         );
