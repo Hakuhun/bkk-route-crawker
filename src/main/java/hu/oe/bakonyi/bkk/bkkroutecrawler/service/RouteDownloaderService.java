@@ -1,5 +1,6 @@
 package hu.oe.bakonyi.bkk.bkkroutecrawler.service;
 
+import feign.FeignException;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.client.BkkRouteClient;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.configuration.BkkConfiguration;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.converter.BKKDataConverter;
@@ -45,7 +46,13 @@ public class RouteDownloaderService {
         List<BkkData> datas = new ArrayList<>();
         List<String> httpStatuses = new ArrayList<>();
 
-        BkkVeichleForRoute routeWrapper = this.getRouteData(routeId);
+        BkkVeichleForRoute routeWrapper = null;
+        try{
+            routeWrapper = this.getRouteData(routeId);
+        }catch (FeignException ex){
+            log.error("Hiba a " + routeId +" viszojnylat letöltése közben");
+        }
+
         httpStatuses.add(routeWrapper.getStatus());
 
         if(routeWrapper.getData() == null || routeWrapper.getStatus().equals("NOT_FOUND")){
@@ -55,7 +62,7 @@ public class RouteDownloaderService {
         BkkTripDetails tripData = null;
         for(VeichleForRouteModel routeData : routeWrapper.getData().getList() ){
 
-            tripData = this.getTripData(routeData.getTripId(), routeData.getVehicleId(), routeData.getServiceDate());
+           tripData = this.getTripData(routeData.getTripId(), routeData.getVehicleId(), routeData.getServiceDate());
 
            httpStatuses.add(tripData.getStatus());
             if(tripData.getData() != null){

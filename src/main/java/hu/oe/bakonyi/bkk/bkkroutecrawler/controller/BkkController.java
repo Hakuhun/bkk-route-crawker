@@ -1,6 +1,7 @@
 package hu.oe.bakonyi.bkk.bkkroutecrawler.controller;
 
 import feign.FeignException;
+import feign.Response;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.client.BkkRouteClient;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.configuration.BkkConfiguration;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.entity.Routes;
@@ -91,6 +92,17 @@ public class BkkController {
         }
 
         return ResponseEntity.ok(saved);
+    }
+
+    @DeleteMapping("dev/route")
+    @Transactional
+    public ResponseEntity deleteRoute(@RequestParam String routeId){
+        try{
+            repository.deleteRouteByRouteCode(routeId);
+        }catch (Exception ewx){
+            return ResponseEntity.unprocessableEntity().build();
+        }
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("prod/routes")

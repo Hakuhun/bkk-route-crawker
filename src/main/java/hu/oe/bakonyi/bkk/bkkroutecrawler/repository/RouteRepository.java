@@ -8,5 +8,6 @@ import java.util.List;
 public interface RouteRepository extends CrudRepository<Routes, Long> {
 
     List<Routes> findRoutesByRouteCode(String routeCode);
+    void deleteRouteByRouteCode(String routeCode);
 
 }
