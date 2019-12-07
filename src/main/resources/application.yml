@@ -6,6 +6,7 @@ spring:
   jpa:
     ddl-auto: update
     hibernate:
+      dialect: org.hibernate.dialect.MySQL5Dialect
       show_sql: true
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
@@ -15,12 +16,6 @@ spring:
     driverClassName: com.mysql.jdbc.Driver
     username: "spring"
     password: "spring"
-  kafka:
-    producer:
-      #bootstrap-servers: "localhost:6667"
-      bootstrap-servers: "localhost:9092"
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 management:
   server:
@@ -64,9 +59,6 @@ logging:
               client:
                 BkkRouteClient: DEBUG
 
-scheulder:
-  bkkkScheulder:  "0 */5 * ? * *"
-
 bkk:
   apiUrl: "https://futar.bkk.hu/api/query/v1/ws/otp/api/where/"
   #apiUrl: https://futar.bkk.hu/utvonaltervezo-api/ws/otp/api/where/
@@ -74,16 +66,6 @@ bkk:
   #appVersion: "apiary-1.0"
   appVersion: 3.2.4-19639-9a6d560c
   version: 3
-
-weather:
-  url: "http://localhost:8001/bkk"
-  fileSystemPath: "weatherproperties.json"
-  bottomLeftLat: 47.1523107
-  bottomLeftLong: 18.8460594
-  topRightLat: 47.6837053
-  topRightLong: 19.391385500000002
-  chunkWideSize: 10
-  chunkHighSize: 6
 
 api:
   key: "2e825506-7aea-4fe1-ad48-5fa87b4ce726"
