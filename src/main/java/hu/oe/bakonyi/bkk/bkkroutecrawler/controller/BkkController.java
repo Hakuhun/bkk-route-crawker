@@ -12,9 +12,11 @@ import hu.oe.bakonyi.bkk.bkkroutecrawler.repository.RouteRepository;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.service.RouteDownloaderService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -75,6 +77,11 @@ public class BkkController {
 
     @GetMapping("prod/route")
     public ResponseEntity<List<BkkData>> getRouteTripData(@RequestParam("route") String route){
+
+        if(route.isEmpty() || !route.contains("BKK") || repository.findRoutesByRouteCode(route) == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Hibás, vagy nem létetző út adat");
+        }
+
         return ResponseEntity.ok(bkkService.getRouteDataForRoute(route));
     }
 

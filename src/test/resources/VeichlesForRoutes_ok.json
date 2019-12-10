@@ -1,0 +1,60 @@
+{
+  "version": 3,
+  "status": "OK",
+  "code": 200,
+  "text": "OK",
+  "currentTime": 1575933450792,
+  "data": {
+    "list": [
+      {
+        "vehicleId": "BKK_5180",
+        "routeId": "BKK_0085",
+        "location": {
+          "lat": 47.571465,
+          "lon": 19.13462
+        },
+        "serviceDate": "20191209",
+        "licensePlate": "MHU764",
+        "label": "Újpalota, Nyírpalota út",
+        "model": "MB Citaro C2-S1-G csuklós autóbusz",
+        "deviated": true,
+        "lastUpdateTime": 1575933447,
+        "status": "IN_TRANSIT_TO",
+        "congestionLevel": null,
+        "vehicleRouteType": "BUS",
+        "capacity": {
+          "adults": 102
+        },
+        "tripId": "BKK_B974911502"
+      },
+      {
+        "vehicleId": "BKK_6380",
+        "routeId": "BKK_0085",
+        "location": {
+          "lat": 47.457565,
+          "lon": 19.028755
+        },
+        "serviceDate": "20191209",
+        "licensePlate": "NCA530",
+        "label": "Márton Áron tér",
+        "model": "MERCEDES Conecto csuklós",
+        "deviated": true,
+        "lastUpdateTime": 1575933436,
+        "status": "IN_TRANSIT_TO",
+        "congestionLevel": null,
+        "vehicleRouteType": "BUS",
+        "tripId": "BKK_B974911516"
+      }
+    ],
+    "outOfRange": false,
+    "limitExceeded": false,
+    "references": {
+      "agencies": {},
+      "routes": {},
+      "stops": {},
+      "trips": {},
+      "alerts": {}
+    },
+    "class": "listWithReferences"
+  }
+}

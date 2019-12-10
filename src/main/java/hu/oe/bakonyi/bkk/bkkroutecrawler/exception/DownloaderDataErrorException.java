@@ -1,15 +1,10 @@
 package hu.oe.bakonyi.bkk.bkkroutecrawler.exception;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.exception.model.DonwloaderDataError;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-@Data
 @EqualsAndHashCode(callSuper = false)
 public class DownloaderDataErrorException extends ResponseStatusException {
     DonwloaderDataError errorObject = null;
@@ -31,7 +26,7 @@ public class DownloaderDataErrorException extends ResponseStatusException {
 
     @Override
     public String getMessage() {
-        return  super.getMessage() + System.lineSeparator() + "A letöltéshez szüséges adatok hiányosak: " + this.toString();
+        return  super.getMessage() + System.lineSeparator() + "A letöltéshez szüséges adatok hiányosak: "+errorObject.toString();
     }
 
 }

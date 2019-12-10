@@ -1,10 +1,12 @@
 package hu.oe.bakonyi.bkk.bkkroutecrawler.model.route;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.Capacity;
 import hu.oe.bakonyi.bkk.bkkroutecrawler.model.Location;
 import lombok.Data;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class VeichleForRouteModel {
     private String vehicleId;
     private String stopId;

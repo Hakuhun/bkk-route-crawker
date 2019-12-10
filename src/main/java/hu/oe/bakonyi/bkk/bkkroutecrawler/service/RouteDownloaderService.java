@@ -31,9 +31,6 @@ import java.util.List;
 public class RouteDownloaderService {
 
     @Autowired
-    RouteRepository repository;
-
-    @Autowired
     BkkRouteClient externalBkkRestClient;
 
     @Autowired
@@ -62,9 +59,10 @@ public class RouteDownloaderService {
         BkkTripDetails tripData = null;
         for(VeichleForRouteModel routeData : routeWrapper.getData().getList() ){
 
-           tripData = this.getTripData(routeData.getTripId(), routeData.getVehicleId(), routeData.getServiceDate());
+            tripData = this.getTripData(routeData.getTripId(), routeData.getVehicleId(), routeData.getServiceDate());
 
            httpStatuses.add(tripData.getStatus());
+
             if(tripData.getData() != null){
                 for(TripStopData stopData : tripData.getData().getEntry().getStopTimes()){
                     boolean alert = getAlert(tripData, routeData.getRouteId(), stopData.getStopId());
@@ -85,7 +83,8 @@ public class RouteDownloaderService {
     boolean getAlert(BkkTripDetails tripData, String route, String stop){
         boolean alert = false;
         if (tripData.getData().getReferences() != null && tripData.getData().getReferences().getAlerts() != null)
-            alert = tripData.getData().getReferences().getAlerts().values().stream().anyMatch(x -> x.getRouteIds().contains(route) && x.getStopIds().contains(stop));
+            alert = tripData.getData().getReferences().getAlerts().values().stream()
+                    .anyMatch(x -> x.getRouteIds().contains(route) && x.getStopIds().contains(stop));
         return alert;
     }
 
