@@ -1,0 +1,15 @@
+hu.oe.bakonyi.bkk.bkkroutecrawler
+hu.oe.bakonyi.bkk.bkkroutecrawler.client
+hu.oe.bakonyi.bkk.bkkroutecrawler.configuration
+hu.oe.bakonyi.bkk.bkkroutecrawler.controller
+hu.oe.bakonyi.bkk.bkkroutecrawler.converter
+hu.oe.bakonyi.bkk.bkkroutecrawler.entity
+hu.oe.bakonyi.bkk.bkkroutecrawler.exception
+hu.oe.bakonyi.bkk.bkkroutecrawler.exception.model
+hu.oe.bakonyi.bkk.bkkroutecrawler.model
+hu.oe.bakonyi.bkk.bkkroutecrawler.model.alert
+hu.oe.bakonyi.bkk.bkkroutecrawler.model.bkk
+hu.oe.bakonyi.bkk.bkkroutecrawler.model.route
+hu.oe.bakonyi.bkk.bkkroutecrawler.model.trip
+hu.oe.bakonyi.bkk.bkkroutecrawler.repository
+hu.oe.bakonyi.bkk.bkkroutecrawler.service
