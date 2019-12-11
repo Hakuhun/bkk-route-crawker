@@ -63,7 +63,7 @@ public class BkkControllerTest {
     }
 
     @Test
-    public void getPrediction_allOk_allOk() throws IOException {
+    public void test_getBkkData_WithGoodParams() throws IOException {
         mapper.findAndRegisterModules();
 
         webApiClient.get()
@@ -105,5 +105,5 @@ public class BkkControllerTest {
 
 
     }
-    
+
 }
